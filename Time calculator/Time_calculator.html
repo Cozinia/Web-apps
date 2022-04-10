@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/vue@3"></script>
+    <title>Time calculator</title>
+</head>
+<style>
+.center{
+    position:absolute;
+    height: X px;
+    width: Y px;
+    left:40%;
+    top:30%;
+    margin-top:- X/2 px;
+    margin-left:- Y/2 px;
+}
+    .footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   text-align: center;
+}
+</style>
+<body>
+
+    <div id="App" class="center">
+        <div id="Pages">
+            <!--Default page-->
+            <div v-if="Pages.Default">
+                <h2>Time calculator</h2>
+                <h3>Please choose operation</h3>
+                <button v-on:click="ChagePage('Subtract')">Subtract</button>
+                <button v-on:click="ChagePage('Add')">Add</button>
+            </div>
+            <!--Subtract-->
+        <div v-if="Pages.Subtract">
+                <h2>Subtract time calculator</h2>
+                <h3>Time </h3>
+                <label>Hour:  </label>
+                <input id="hour1">
+                <br>
+                <label>Minute: </label>
+                <input id="minute1">
+                <br>
+                <h3>Value you want to subtract</h3>
+                <label>Hour:  </label>
+                <input id="hour2">
+                <br>
+                <label>Minute: </label>
+                <input id="minute2">
+                <br>
+                <button v-on:click="Subtract()">Calculate</button>
+                <button v-on:click="ChagePage('Default')">Back</button>
+            </div>
+            <!--Add-->
+            <div v-if="Pages.Add">
+                <h2>Add time calculator</h2>
+                <h3>Time </h3>
+                <label>Hour:  </label>
+                <input id="hour1">
+                <br>
+                <label>Minute: </label>
+                <input id="minute1">
+                <br>
+                <h3>Value you want to add</h3>
+                <label>Hour:  </label>
+                <input id="hour2">
+                <br>
+                <label>Minute: </label>
+                <input id="minute2">
+                <br>
+                <button v-on:click="Add()">Calculate</button>
+                <button v-on:click="ChagePage('Default')">Back</button>
+                <h3  v-if="resultingHour && resultingMinute">Resulting time</h3>
+                <h3 v-if="resultingHour && resultingMinute">{{resultingHour}}:{{resultingMinute}}</h3>
+            </div>
+        </div>
+        <footer class="footer">Made by Cozinia Motronu</footer>
+    </div>
+    <script>
+        Vue.createApp({
+            el: '#App',
+            data() {
+                return {
+                    resultingHour:0,
+                    resultingMinute:0,
+                    Pages:{
+                    Default:true,
+                    Subtract:false,
+                    Add:false,
+                },
+
+            }
+
+            },
+            methods:{
+                ChagePage : function(page){
+                    for (var property in this.Pages) {
+                         this.Pages[property] = false;
+                    }
+                    this.Pages[page] = true;
+                },
+                Subtract : function(){
+                    var hour1 = parseInt(document.getElementById("hour1").value);
+                    var minute1 = parseInt(document.getElementById("minute1").value);
+                    var hour2 = parseInt(document.getElementById("hour2").value);
+                    var minute2 = parseInt(document.getElementById("minute2").value);
+                    console.log("\ntime t1: "  + hour1 + ":" + minute1 + "\ntime t2: " + hour2 + ":" + minute2);
+                   if(hour2 == ""){
+                       var hour = hour1;
+                       var minute = Math.abs(minute1-minute2);
+                       console.log("Time: " + hour + ":" + minute);
+                   }else{
+                       var hour = hour1 - hour2;
+                       var minute = Math.abs(minute1-minute2);
+                       console.log("Time: " + hour + ":" + minute);
+                   }
+                },
+                Add : function(){
+                    var hour1 = parseInt(document.getElementById("hour1").value);
+                    var minute1 = parseInt(document.getElementById("minute1").value);
+                    var hour2 = parseInt(document.getElementById("hour2").value);
+                    var minute2 = parseInt(document.getElementById("minute2").value);
+                    var minute = 0;
+                    var hour = 0;
+                   
+                    if((minute1 + minute2) > 59){
+                       minute = (minute1 + minute2) - 65; 
+                        console.log("minute1: " + minute1 + " + " + minute2 + " equals " + minute);
+                        hour = hour1 + 1;
+                    }else{
+                        minute = minute1 + minute2;
+                        hour = hour1 + hour2;
+                    }
+                    this.resultingHour = hour;
+                    this.resultingMinute = minute;
+                }
+
+            }
+       
+
+        }).mount("#App");
+    </script>
+
+</body>
+</html>
+
